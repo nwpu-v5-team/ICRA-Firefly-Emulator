@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot name="infantry" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="infantry_base.xacro"/>
+
+    <infantry_base_gazebo name="blue2" number="2"/>
+
+    <led_color name="Blue"/>
+
+</robot>

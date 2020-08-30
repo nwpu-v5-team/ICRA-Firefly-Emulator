@@ -1,0 +1,53 @@
+<launch>
+    <!-- these are the arguments you can pass this launch file, for example gui:=true -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
+    <!-- launch the ICRA RM AI challenge 3D map in gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find icra_robomaster_emulator)/worlds/ICRA_2020.world"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+
+    <!-- launch the transform node -->
+    <include file="$(find icra_robomaster_emulator)/launch/transform_red2.launch"/>
+
+    <group ns="red2">
+        <param name="tf_prefix" value="red2"/>
+
+        <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher"
+              args="0 0 0 0 0 0 red2/base_footprint red2/reverse_base_link 40"/>
+
+        <!-- 加载机器人模型描述参数 -->
+        <param name="robot_description"
+               command="$(find xacro)/xacro --inorder '$(find icra_robomaster_emulator)/robots/infantry_test_red2.xacro' ns:=red2"/>
+
+        <!-- 运行joint_state_publisher节点，发布机器人的关节状态  -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
+
+        <!-- 运行robot_state_publisher节点，发布tf  -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+            <param name="publish_frequency" type="double" value="50.0"/>
+        </node>
+
+        <!-- 在gazebo中加载机器人模型-->
+        <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+              args="-urdf
+                    -x 3.486985
+                    -y 1.655670
+                    -z 0
+                    -R 0
+                    -P 0
+                    -Y 1.57
+                    -model red2
+                    -param robot_description"/>
+    </group>
+
+</launch>

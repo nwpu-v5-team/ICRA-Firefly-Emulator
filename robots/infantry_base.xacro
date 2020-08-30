@@ -1,0 +1,893 @@
+<?xml version="1.0"?>
+<robot name="infantry" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="led_color" params="name">
+
+
+        <gazebo reference="led_link">
+            <material>Gazebo/${name}</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="fr_wheel_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="fl_wheel_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="br_wheel_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="bl_wheel_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="yaw_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="pitch_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <gazebo reference="camera_link">
+            <material>Gazebo/Black</material>
+            <gravity>true</gravity>
+        </gazebo>
+
+        <!-- materials -->
+        <gazebo reference="reverse_base_link">
+            <material>Gazebo/Black</material>
+            <gravity>1</gravity>
+        </gazebo>
+
+        <gazebo reference="laser_link">
+            <material>Gazebo/Black</material>
+            <gravity>1</gravity>
+        </gazebo>
+
+    </xacro:macro>
+
+    <xacro:macro name="transmission_block" params="joint_name">
+        <!-- Transmission is important to link the joints and the controller -->
+        <transmission name="${joint_name}_tran1">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint_name}">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${joint_name}_motor1">
+                <mechanicalReduction>1</mechanicalReduction>
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <xacro:macro name="infantry_base_gazebo" params="name number">
+        <link name="reverse_base_link">
+            <inertial>
+                <origin xyz="0.0477739707739749 -0.00164833057138162 -0.0880049319971866" rpy="0 0 0"/>
+                <mass value="2.61805702306918"/>
+                <inertia
+                        ixx="0.0291473647395908"
+                        ixy="0.000115651644374304"
+                        ixz="-0.00498842704154131"
+                        iyy="0.0727502731825179"
+                        iyz="6.46423219582415E-05"
+                        izz="0.0871346154507866"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/base_link.STL"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/base_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="base_link"/>
+        <joint name="base_link_to_reverse_base_joint" type="fixed">
+            <origin
+                    xyz="0 0 0"
+                    rpy="0 0 3.1415926"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="base_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+
+        <link name="fl_wheel_link">
+            <inertial>
+                <origin xyz="4.55424340645161E-06 0.0176868108348461 8.98299634677358E-08" rpy="0 0 0"/>
+                <mass value="0.236885541267816"/>
+                <inertia
+                        ixx="0.00046557378396505"
+                        ixy="-4.99799535878173E-09"
+                        ixz="-1.40670229619331E-08"
+                        iyy="0.000878342992167395"
+                        iyz="2.37648767081579E-07"
+                        izz="0.000466158946275621"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/fl_wheel_link.STL"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/fl_wheel_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="base_link_to_fl_wheel_joint" type="fixed">
+            <origin
+                    xyz="-0.1659 -0.2137 -0.1375"
+                    rpy="3.1416 0 3.1416"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="fl_wheel_link"/>
+            <axis
+                    xyz="0 -1 0"/>
+            <limit
+                    lower="-180"
+                    upper="180"
+                    effort="100"
+                    velocity="1"/>
+        </joint>
+        <link name="bl_wheel_link">
+            <inertial>
+                <origin xyz="4.10012548530264E-06 0.01770997853253 -5.27988902037091E-05" rpy="0 0 0"/>
+                <mass value="0.236887176909849"/>
+                <inertia
+                        ixx="0.000465760745786461"
+                        ixy="3.6445532139643E-08"
+                        ixz="1.13492009517034E-07"
+                        iyy="0.000878342593748806"
+                        iyz="2.30294856251004E-07"
+                        izz="0.000465960973650138"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/bl_wheel_link.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/bl_wheel_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="base_link_to_bl_wheel_joint" type="fixed">
+            <origin xyz="0.2491 -0.2137 -0.1375" rpy="3.1416 0 3.1416"/>
+            <parent link="reverse_base_link"/>
+            <child link="bl_wheel_link"/>
+            <axis xyz="0 -1 0"/>
+            <limit
+                    lower="-180"
+                    upper="180"
+                    effort="100"
+                    velocity="1"/>
+        </joint>
+        <link name="fr_wheel_link">
+            <inertial>
+                <origin xyz="-0.0177099588438618 -2.72323842762656E-05 -4.55179730912691E-05" rpy="0 0 0"/>
+                <mass value="0.236887099556588"/>
+                <inertia
+                        ixx="0.000878344241770163"
+                        ixy="-1.62535092753024E-07"
+                        ixz="-1.67093597753626E-07"
+                        iyy="0.000465935765237912"
+                        iyz="1.34310056246642E-07"
+                        izz="0.00046578764591559"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/fr_wheel_link.STL"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/fr_wheel_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="base_link_to_fr_wheel_joint" type="fixed">
+            <origin xyz="-0.1659 0.2147 -0.1375" rpy="-3.1416 0 1.5708"/>
+            <parent link="reverse_base_link"/>
+            <child link="fr_wheel_link"/>
+            <axis xyz="1 0 0"/>
+            <limit
+                    lower="-180"
+                    upper="180"
+                    effort="100"
+                    velocity="1"/>
+        </joint>
+        <link name="br_wheel_link">
+            <inertial>
+                <origin xyz="4.22412601989997E-06 -0.0176867978000374 -1.70300625035313E-06" rpy="0 0 0"/>
+                <mass value="0.236885540348786"/>
+                <inertia
+                        ixx="0.000465656287968378"
+                        ixy="8.88556156154069E-08"
+                        ixz="2.04092661948253E-07"
+                        iyy="0.000878343009665673"
+                        iyz="2.20585609371505E-07"
+                        izz="0.000466076471112962"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/br_wheel_link.STL"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/br_wheel_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="base_link_to_br_wheel_joint" type="fixed">
+            <origin xyz="0.2491 0.2147 -0.1375" rpy="3.1416 0 3.1416"/>
+            <parent link="reverse_base_link"/>
+            <child link="br_wheel_link"/>
+            <axis xyz="0 1 0"/>
+            <limit
+                    lower="-180"
+                    upper="180"
+                    effort="100"
+                    velocity="1"/>
+        </joint>
+
+        <link name="yaw_link">
+            <!--            <inertial>-->
+            <!--                <origin xyz="0.000737874753635764 0.0030974345822228 -0.0128714274812879" rpy="0 0 0" />-->
+            <!--                <mass value="0.421994033661975" />-->
+            <!--                <inertia-->
+            <!--                        ixx="0.00117546687170737"-->
+            <!--                        ixy="-3.71207266051613E-06"-->
+            <!--                        ixz="5.7248467890299E-06"-->
+            <!--                        iyy="0.00101839693632515"-->
+            <!--                        iyz="3.08717475226917E-05"-->
+            <!--                        izz="0.000387008761613787" />-->
+            <!--            </inertial>-->
+            <!--            <visual>-->
+            <!--                <origin xyz="0 0 0" rpy="0 0 0" />-->
+            <!--                <geometry>-->
+            <!--                    <mesh filename="package://icra_robomaster_emulator/meshes/yaw_link.STL"/>-->
+            <!--                </geometry>-->
+            <!--                <material name="">-->
+            <!--                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />-->
+            <!--                </material>-->
+            <!--            </visual>-->
+            <!--            <collision>-->
+            <!--                <origin xyz="0 0 0" rpy="0 0 0" />-->
+            <!--                <geometry>-->
+            <!--                    <mesh filename="package://icra_robomaster_emulator/meshes/yaw_link.STL"/>-->
+            <!--                </geometry>-->
+            <!--            </collision>-->
+        </link>
+        <joint name="base_link_to_yaw_joint" type="fixed">
+            <origin xyz="0.035 0 0.03" rpy="3.1416 0 0"/>
+            <parent link="reverse_base_link"/>
+            <child link="yaw_link"/>
+            <axis xyz="0 0 1"/>
+            <limit
+                    lower="-1.57"
+                    upper="1.57"
+                    effort="1000"
+                    velocity="100"/>
+        </joint>
+        <link name="pitch_link">
+            <!--            <inertial>-->
+            <!--                <origin xyz="-0.0248744689521257 -0.00773773904667806 0.00551810676709141" rpy="3.14 0 0" />-->
+            <!--                <mass value="0.505044863318263" />-->
+            <!--                <inertia-->
+            <!--                        ixx="0.000454853365420977"-->
+            <!--                        ixy="-0.000223712424275145"-->
+            <!--                        ixz="-0.000127254504885725"-->
+            <!--                        iyy="0.00181584724350249"-->
+            <!--                        iyz="4.96213671998319E-05"-->
+            <!--                        izz="0.00181354361478661" />-->
+            <!--            </inertial>-->
+            <!--            <visual>-->
+            <!--                <origin xyz="0 0 0" rpy="0 0 0" />-->
+            <!--                <geometry>-->
+            <!--                    <mesh filename="package://icra_robomaster_emulator/meshes/pitch_link.STL"/>-->
+            <!--                </geometry>-->
+            <!--                <material name="">-->
+            <!--                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />-->
+            <!--                </material>-->
+            <!--            </visual>-->
+            <!--            <collision>-->
+            <!--                <origin xyz="0 0 0" rpy="0 0 0" />-->
+            <!--                <geometry>-->
+            <!--                    <mesh filename="package://icra_robomaster_emulator/meshes/pitch_link.STL"/>-->
+            <!--                </geometry>-->
+            <!--            </collision>-->
+        </link>
+        <joint name="base_link_to_pitch_joint" type="fixed">
+            <origin xyz="0 -0.025 -0.13" rpy="3.14 0 0"/>
+            <parent link="yaw_link"/>
+            <child link="pitch_link"/>
+            <axis xyz="0 1 0"/>
+            <limit
+                    lower="-0.35"
+                    upper="0.35"
+                    effort="1000"
+                    velocity="100"/>
+        </joint>
+
+        <link name="shoot_link"/>
+        <joint name="pitch_link_to_shoot_joint" type="fixed">
+            <origin xyz="-0.167160614910392 -0.0251245566607632 0" rpy="0 0 0"/>
+            <parent link="pitch_link"/>
+            <child link="shoot_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+        <link name="camera_link">
+            <inertial>
+                <origin xyz="0.0060861 1.0269E-17 7.6833E-05" rpy="0 0 0"/>
+                <mass value="0.01627"/>
+                <inertia
+                        ixx="3.55E-06"
+                        ixy="2.3732E-22"
+                        ixz="1.3726E-09"
+                        iyy="2.0801E-06"
+                        iyz="6.7678E-23"
+                        izz="2.0554E-06"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/camera_link.STL"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.75294 0.75294 0.75294 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://icra_robomaster_emulator/meshes/camera_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="yaw_link_to_camera_wheel_joint" type="fixed">
+            <origin xyz="-0.041 0 0.019" rpy="1.3809E-15 3.1415926 -6.6834E-14"/>
+            <parent link="yaw_link"/>
+            <child link="camera_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+        <link name="camera_depth_link"/>
+        <joint name="camera_depth_link_to_camera_joint" type="fixed">
+            <origin xyz="0 0 0.03" rpy="0 0 0"/>
+            <parent link="camera_link"/>
+            <child link="camera_depth_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+        <link name="imu_link"/>
+        <joint name="imu_link_to_camera_joint" type="fixed">
+            <origin
+                    xyz="0 0 0"
+                    rpy="0 0 0"/>
+            <parent
+                    link="camera_link"/>
+            <child
+                    link="imu_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+
+<!--        <link name="laser_link">-->
+<!--            <inertial>-->
+<!--                <origin xyz="-0.00019454 1.2441E-18 0.027108" rpy="0 0 0"/>-->
+<!--                <mass value="0.12185"/>-->
+<!--                <inertia-->
+<!--                        ixx="6.3159E-05"-->
+<!--                        ixy="-9.0976E-22"-->
+<!--                        ixz="-4.4573E-07"-->
+<!--                        iyy="6.3776E-05"-->
+<!--                        iyz="-1.8492E-21"-->
+<!--                        izz="4.2072E-05"/>-->
+<!--            </inertial>-->
+<!--            <visual>-->
+<!--                <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--                <geometry>-->
+<!--                    <mesh filename="package://icra_robomaster_emulator/meshes/laser_link.STL"/>-->
+<!--                </geometry>-->
+<!--                <material name="">-->
+<!--                    <color rgba="0.75294 0.75294 0.75294 1"/>-->
+<!--                </material>-->
+<!--            </visual>-->
+<!--            <collision>-->
+<!--                <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--                <geometry>-->
+<!--                    <mesh filename="package://icra_robomaster_emulator/meshes/laser_link.STL"/>-->
+<!--                </geometry>-->
+<!--            </collision>-->
+<!--        </link>-->
+        <link name="laser_link"/>
+        <joint name="base_link_to_laser_joint" type="fixed">
+            <origin
+                    xyz="0.0 0 -0.1"
+                    rpy="4.8881E-16 -3.1415926 1.57"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="laser_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+
+        <link name="backarmour_link">
+            <inertial>
+                <origin
+                        xyz="-0.0011253676673515 -0.000435918298616854 0.00439313015543574"
+                        rpy="0 0 0"/>
+                <mass
+                        value="0.000254223072032224"/>
+                <inertia
+                        ixx="2.23780062810052E-07"
+                        ixy="-5.72585818861819E-09"
+                        ixz="5.28095521648994E-08"
+                        iyy="2.11238731690911E-07"
+                        iyz="2.13692421847893E-08"
+                        izz="4.0842293135684E-08"/>
+            </inertial>
+            <visual>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/backarmour_link_${number}.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/backarmour_link_${number}.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="backarmour_link" type="fixed">
+            <origin
+                    xyz="0.309948129796423 0.00050000083067878 -0.0837191934849221"
+                    rpy="0 0 0"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="backarmour_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+        <link name="leftarmour_link">
+            <inertial>
+                <origin
+                        xyz="-0.000435918298617027 0.00112536766735122 0.00439313015543408"
+                        rpy="0 0 0"/>
+                <mass
+                        value="0.000254223072032222"/>
+                <inertia
+                        ixx="2.11238731690911E-07"
+                        ixy="5.72585818861778E-09"
+                        ixz="2.13692421847883E-08"
+                        iyy="2.23780062810051E-07"
+                        iyz="-5.28095521648979E-08"
+                        izz="4.0842293135682E-08"/>
+            </inertial>
+            <visual>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/leftarmour_link_${number}.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/leftarmour_link_${number}.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="leftarmour_link" type="fixed">
+            <origin
+                    xyz="0.0446 -0.18735 -0.085219"
+                    rpy="0 0 0"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="leftarmour_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+        <link name="frontarmour_link">
+            <inertial>
+                <origin
+                        xyz="0.00112536766735144 0.000435918298616677 0.00439313015543452"
+                        rpy="0 0 0"/>
+                <mass
+                        value="0.000254223072032176"/>
+                <inertia
+                        ixx="2.23780062810018E-07"
+                        ixy="-5.72585818861761E-09"
+                        ixz="-5.2809552164888E-08"
+                        iyy="2.11238731690877E-07"
+                        iyz="-2.13692421847883E-08"
+                        izz="4.08422931356768E-08"/>
+            </inertial>
+            <visual>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/frontarmour_link_${number}.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/frontarmour_link_${number}.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="frontarmour_link" type="fixed">
+            <origin
+                    xyz="-0.22675 0.0005 -0.083719"
+                    rpy="0 0 0"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="frontarmour_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+        <link name="rightarmour_link">
+            <inertial>
+                <origin
+                        xyz="0.000435918298617499 -0.00112536766735127 0.00439313015543541"
+                        rpy="0 0 0"/>
+                <mass
+                        value="0.000254223072032232"/>
+                <inertia
+                        ixx="2.11238731690918E-07"
+                        ixy="5.72585818861791E-09"
+                        ixz="-2.1369242184789E-08"
+                        iyy="2.23780062810059E-07"
+                        iyz="5.28095521648997E-08"
+                        izz="4.08422931356845E-08"/>
+            </inertial>
+            <visual>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/rightarmour_link_${number}.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/rightarmour_link_${number}.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="rightarmour_link" type="fixed">
+            <origin
+                    xyz="0.0446 0.18835 -0.085219"
+                    rpy="0 0 0"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="rightarmour_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+
+        <link name="led_link">
+            <inertial>
+                <origin
+                        xyz="-0.0850125556271354 0.00025011937892036 -0.0459691713043945"
+                        rpy="0 0 0"/>
+                <mass
+                        value="0.075630235672926"/>
+                <inertia
+                        ixx="0.000991980065973672"
+                        ixy="-6.765891181496E-10"
+                        ixz="-0.000442661176874933"
+                        iyy="0.0021294228286385"
+                        iyz="-4.36042316223775E-10"
+                        izz="0.00264786570730509"/>
+            </inertial>
+            <visual>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/led_link.STL"/>
+                </geometry>
+                <material
+                        name="">
+                    <color
+                            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin
+                        xyz="0 0 0"
+                        rpy="0 0 0"/>
+                <geometry>
+                    <mesh
+                            filename="package://icra_robomaster_emulator/meshes/led_link.STL"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="led_link" type="fixed">
+            <origin
+                    xyz="0.26618 0.00025 0.030082"
+                    rpy="0 0 0"/>
+            <parent
+                    link="reverse_base_link"/>
+            <child
+                    link="led_link"/>
+            <axis
+                    xyz="0 0 0"/>
+        </joint>
+
+        <!--        <transmission_block joint_name="base_link_to_yaw_joint"/>-->
+        <!--        <transmission_block joint_name="base_link_to_pitch_joint"/>-->
+
+        <!-- controller -->
+        <gazebo>
+            <plugin name="mecanum_base_controller" filename="libgazebo_ros_planar_move.so">
+                <commandTopic>gazebo_cmd_vel</commandTopic>
+                <odometryTopic>odom</odometryTopic>
+                <odometryFrame>odom</odometryFrame>
+                <odometryRate>30</odometryRate>
+                <robotBaseFrame>base_footprint</robotBaseFrame>
+                <broadcastTF>true</broadcastTF>
+            </plugin>
+        </gazebo>
+
+        <!-- laser -->
+        <gazebo reference="laser_link">
+            <sensor type="ray" name="head_rplidar_sensor">
+                <pose>2000 2000 2000 0 0 0</pose>
+                <visualize>false</visualize>
+                <update_rate>15</update_rate>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>1600</samples>
+                            <resolution>1</resolution>
+                            <min_angle>0</min_angle>
+                            <max_angle>6.2831853</max_angle>
+                        </horizontal>
+                    </scan>
+                    <range>
+                        <min>0.40</min>
+                        <max>12.0</max>
+                        <resolution>0.01</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <!-- Noise parameters based on published spec for rplidar laser
+                             achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                             stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                             reading. -->
+                        <mean>0.0</mean>
+                        <stddev>0.01</stddev>
+                    </noise>
+                </ray>
+                <plugin name="gazebo_ros_head_rplidar_controller" filename="libgazebo_ros_laser.so">
+                    <topicName>scan</topicName>
+                    <frameName>laser_link</frameName>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+        <!-- camera 1-->
+        <gazebo reference="camera_link">
+            <sensor type="camera" name="camera_rgb">
+                <update_rate>30.0</update_rate>
+                <camera name="head">
+                    <horizontal_fov>0.774419</horizontal_fov>
+                    <image>
+                        <width>1440</width>
+                        <height>1080</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.02</near>
+                        <far>300</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <!-- Noise is sampled independently per pixel on each frame.
+                             That pixel's noise value is added to each of its color
+                             channels, which at that point lie in the range [0,1]. -->
+                        <mean>0.0</mean>
+                        <stddev>0.007</stddev>
+                    </noise>
+                </camera>
+
+                <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                    <alwaysOn>true</alwaysOn>
+                    <updateRate>0.0</updateRate>
+                    <cameraName>camera_rgb</cameraName>
+                    <imageTopicName>image_raw</imageTopicName>
+                    <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                    <frameName>camera_link</frameName>
+                    <hackBaseline>0.0</hackBaseline>
+                    <distortionK1>-0.153259</distortionK1>
+                    <distortionK2>0.251775</distortionK2>
+                    <distortionK3>0.002903</distortionK3>
+                    <distortionT1>-0.001509</distortionT1>
+                    <distortionT2>0.000000</distortionT2>
+                    <CxPrime>725.612063</CxPrime>
+                    <Cx>725.612063</Cx>
+                    <Cy>577.482007</Cy>
+                    <focalLength>1765.585888</focalLength>
+                </plugin>
+
+            </sensor>
+        </gazebo>
+
+        <!-- camera 2-->
+        <gazebo reference="camera_depth_link">
+            <sensor type="depth" name="camera_depth">
+                <camera>
+                    <horizontal_fov>0.962418</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.02</near>
+                        <far>3</far>
+                    </clip>
+                </camera>
+                <plugin name="kinect_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+                    <cameraName>camera_depth</cameraName>
+                    <alwaysOn>true</alwaysOn>
+                    <updateRate>10</updateRate>
+                    <imageTopicName>rgb/image_raw</imageTopicName>
+                    <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                    <pointCloudTopicName>depth/points</pointCloudTopicName>
+                    <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+                    <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+                    <frameName>camera_depth_link</frameName>
+                    <baseline>0.1</baseline>
+                    <distortion_k1>0.082613</distortion_k1>
+                    <distortion_k2>0.043275</distortion_k2>
+                    <distortion_k3>0.002486</distortion_k3>
+                    <distortion_t1>-0.000823</distortion_t1>
+                    <distortion_t2>0.0</distortion_t2>
+                    <CxPrime>325.411</CxPrime>
+                    <Cx>325.411</Cx>
+                    <Cy>246.753</Cy>
+                    <focalLength>612.852480</focalLength>
+                    <hackBaseline>0</hackBaseline>
+                    <pointCloudCutoff>0.4</pointCloudCutoff>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+        <!-- pose controller plugin -->
+        <gazebo>
+            <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>50.0</updateRate>
+                <bodyName>base_link</bodyName>
+                <topicName>ground_truth/state</topicName>
+                <gaussianNoise>0.01</gaussianNoise>
+                <frameName>world</frameName>
+                <xyzOffsets>0 0 0</xyzOffsets>
+                <rpyOffsets>0 0 0</rpyOffsets>
+            </plugin>
+        </gazebo>
+
+        <!-- imu -->
+        <gazebo reference="imu_link">
+            <gravity>true</gravity>
+            <sensor type="imu" name="imu_sensor">
+                <always_on>true</always_on>
+                <update_rate>400</update_rate>
+                <visualize>true</visualize>
+                <topic>__default_topic__</topic>
+                <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                    <topicName>imu</topicName>
+                    <bodyName>imu_link</bodyName>
+                    <updateRateHZ>400.0</updateRateHZ>
+                    <gaussianNoise>0.0</gaussianNoise>
+                    <xyzOffset>0 0 0</xyzOffset>
+                    <rpyOffset>0 0 0</rpyOffset>
+                    <frameName>${name}/imu_link</frameName>
+                </plugin>
+                <pose>0 0 0 0 0 0</pose>
+            </sensor>
+        </gazebo>
+
+    </xacro:macro>
+
+
+</robot>

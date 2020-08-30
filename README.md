@@ -162,6 +162,6 @@ Notes:
 - Modified ground_plane. If you encounter problems that cannot be loaded, first put the icra_ground_plane folder in the ICRA-Firefly-Emulator/wall-2019/ directory under ~/.gazebo/models/.
   
   ```shell
-  cd ICRA-Firefly-Emulator/wall-2019/
+  cd ICRA-Firefly-Emulator/wall-2020/
   cp -r icra_ground_plane/ ~/.gazebo/models/
   ```

@@ -1,0 +1,30 @@
+<launch>
+
+    <node pkg="icra_robomaster_emulator"
+          name="red1"
+          type="icra_robomaster_emulator_node"
+          output="screen"
+          required="true">
+    </node>
+
+    <node pkg="icra_robomaster_emulator"
+          name="red2"
+          type="icra_robomaster_emulator_node"
+          output="screen"
+          required="true">
+    </node>
+
+    <node pkg="icra_robomaster_emulator"
+          name="blue1"
+          type="icra_robomaster_emulator_node"
+          output="screen"
+          required="true">
+    </node>
+
+    <node pkg="icra_robomaster_emulator"
+          name="blue2"
+          type="icra_robomaster_emulator_node"
+          output="screen"
+          required="true">
+    </node>
+</launch>
