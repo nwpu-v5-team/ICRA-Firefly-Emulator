@@ -2,8 +2,6 @@
 
 This repository is an emulator for 2020 DJI ICRA Robomaster AI Challenge, created by Northwestern Polytechnical University Firefly team.
 
-*The code is coming soon...*
-
 ## Introduction
 
 According to the rules of the 2020 ICRA RoboMaster AI Challenge competition, we have built a simulation platform based on Gazebo which simulates the real Robomaster AI robot scene.
