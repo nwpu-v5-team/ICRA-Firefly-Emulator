@@ -69,13 +69,19 @@ source devel/setup.bash # Change to `source devel/setup.zsh` if you use zsh.
 Launch all of the four robots:
 
 ```shell
-roslaunch infantry2020 simulation_2020.launch
+roslaunch icra_robomaster_emulator simulation_2020.launch
+```
+
+Launch all of the four robots in 2021 version map:
+
+```shell
+roslaunch icra_robomaster_emulator simulation_2021.launch
 ```
 
 If you only want to run only robot:
 
 ```shell
-roslaunch infantry2020 simulation_red2.launch
+roslaunch icra_robomaster_emulator simulation_red2.launch
 ```
 
 Then the Red2 robot will be launched.
