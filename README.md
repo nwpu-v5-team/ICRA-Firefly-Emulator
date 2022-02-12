@@ -113,7 +113,7 @@ The namespace name before different topics means different robot: red1, red2, bl
 Start the keyboard control node:
 
 ```shell
-rosrun infantry2020 keyboard_ctrl_node __ns:=/red2
+rosrun icra_robomaster_emulator keyboard_ctrl_node __ns:=/red2
 ```
 
 Notes:
@@ -139,7 +139,7 @@ Notes:
 
 - If the  function package gazebo_ros_control is missing, ensure that the previous dependencies are completely installed;
 
-- If there are problems such as missing msgs, you can first compile the roborts_msgs package separately;
+- If there are problems such as missing msgs, you can first compile the roborts_msgs package separately. You can find roborts_msgs package in [the offical repository](https://github.com/RoboMaster/RoboRTS);
   
   ```shell
   catkin_make -DCATKIN_WHITELIST_PACKAGES="roborts_msgs"
